@@ -71,6 +71,40 @@ curl http://localhost:8000/info
 curl http://localhost:8000/metrics | head
 ```
 
+## Run Output
+
+Local stack startup:
+
+```bash
+docker compose up -d
+```
+
+Running containers:
+
+```bash
+docker compose ps
+```
+
+![docker compose ps](docs/images/compose-ps.png)
+
+Health, readiness, and runtime info:
+
+```bash
+curl http://localhost:8000/health
+curl http://localhost:8000/ready
+curl http://localhost:8000/info
+```
+
+![health and readiness](docs/images/health-ready.png)
+
+Metrics output:
+
+```bash
+curl http://localhost:8000/metrics | head
+```
+
+![metrics output](docs/images/metrics-output.png)
+
 ## Run Checks
 
 Smoke tests:
@@ -127,6 +161,14 @@ The GitHub Actions workflow does the following:
 Workflow file:
 [.github/workflows/ci.yml](.github/workflows/ci.yml)
 
+CI pipeline result:
+
+![CI success](docs/images/ci-success.png)
+
+Published package:
+
+![GHCR package](docs/images/ghcr-package.png)
+
 ## Documentation
 
 - [docs/architecture.md](docs/architecture.md)
@@ -145,7 +187,3 @@ Workflow file:
 - The Compose setup uses a read-only filesystem for the app container.
 - The readiness endpoint checks database connectivity, not just environment variables.
 - A `Makefile` is included as an optional shortcut, but the commands above are the primary documented workflow.
-
-## License
-
-MIT
