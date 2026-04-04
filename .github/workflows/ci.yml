@@ -61,15 +61,25 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Scan image with Trivy
+      - name: Scan image with Trivy (table output)
         # Pin to Aqua's known-safe immutable SHA after the March 2026 tag-poisoning incident.
         uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1
         with:
           image-ref: "${{ env.IMAGE_NAME }}:${{ github.sha }}"
-          format: "sarif"
-          output: "trivy-results.sarif"
+          format: "table"
+          scanners: "vuln"
           severity: "HIGH,CRITICAL"
           exit-code: "1"
+
+      - name: Generate Trivy SARIF report
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1
+        with:
+          image-ref: "${{ env.IMAGE_NAME }}:${{ github.sha }}"
+          format: "sarif"
+          scanners: "vuln"
+          output: "trivy-results.sarif"
+          severity: "HIGH,CRITICAL"
+          exit-code: "0"
 
       - name: Upload Trivy scan results to GitHub Security
         if: always()
