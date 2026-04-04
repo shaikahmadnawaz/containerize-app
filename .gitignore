@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+.pytest_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets and credentials — never commit these
+.env
+*.env
+secrets/
+*.pem
+*.key
+*.p12
+
+# Docker Compose overrides (local-only)
+docker-compose.override.yml
+
+# Terraform (if added later)
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+
+# Trivy scan output
+trivy-results.sarif

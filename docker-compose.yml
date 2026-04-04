@@ -1,0 +1,74 @@
+---
+# docker-compose.yml — local development and integration testing stack.
+# Run: docker compose up -d
+# Stop: docker compose down
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    image: containerize-app:local
+    container_name: containerize-app
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://appuser:apppass@db:5432/appdb}
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - appnet
+    # Read-only filesystem — app writes nothing to disk.
+    read_only: true
+    tmpfs:
+      - /tmp
+    # Drop all Linux capabilities; add only what is explicitly required.
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+  db:
+    image: postgres:16-alpine
+    container_name: containerize-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-appuser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-apppass}
+      POSTGRES_DB: ${POSTGRES_DB:-appdb}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U appuser -d appdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - appnet
+    # No external port exposure — only app service communicates with db.
+
+volumes:
+  pgdata:
+    name: containerize-app-pgdata
+
+networks:
+  appnet:
+    name: containerize-app-net
+    driver: bridge
