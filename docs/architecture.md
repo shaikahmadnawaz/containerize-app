@@ -49,11 +49,11 @@ git push (master / PR)
 ## Image Build Strategy (Multi-Stage)
 
 ```text
-Stage 1: builder (python:3.12-slim)
+Stage 1: builder (python:3.14-slim)
   ├── Install gcc (wheel compilation only)
   └── pip install --prefix=/install requirements.txt
 
-Stage 2: runtime (python:3.12-slim)
+Stage 2: runtime (python:3.14-slim)
   ├── Create non-root user (uid 10001)
   ├── COPY --from=builder /install  ← packages only, no build tools
   ├── COPY app/                      ← source only

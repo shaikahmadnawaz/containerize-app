@@ -37,7 +37,7 @@ containerize-app/
 
 - Docker
 - Docker Compose plugin
-- Python 3.12+ if you want to run tests outside the container
+- Python 3.14+ if you want to run tests outside the container
 - Trivy if you want to run the vulnerability scan locally
 
 ## Run the Project
