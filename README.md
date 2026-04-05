@@ -16,6 +16,18 @@ It includes:
 - Trivy image scanning
 - supporting operational documentation
 
+## Architecture
+
+The project runs a FastAPI application and PostgreSQL using Docker Compose.
+
+- `app` runs the API container
+- `db` runs PostgreSQL on an internal Docker network
+- only the API is exposed on port `8000`
+- health, readiness, and metrics endpoints support validation and monitoring
+- GitHub Actions builds, scans, and pushes the image to GHCR
+
+For more details, see [docs/architecture.md](docs/architecture.md).
+
 ## Project Structure
 
 ```text
